@@ -49,38 +49,38 @@ Citizen.CreateThread(function()
             -- Draw speedometer
             if (spd >= speedLimit) then
                 -- Over speed limit, draw speed using speedColorOver
-                drawTxt(("%.3d"):format(math.ceil(spd)), speedFont, speedColorOver, 0.9, 0.160, 0.900)
+                drawTxt(("%.3d"):format(math.ceil(spd)), speedFont, speedColorOver, 0.9, 0.165, 0.900)
             else
                 -- Under speed limit, draw speed using speedColorUnder
-                drawTxt(("%.3d"):format(math.ceil(spd)), speedFont, speedColorUnder, 0.9, 0.160, 0.900)
+                drawTxt(("%.3d"):format(math.ceil(spd)), speedFont, speedColorUnder, 0.9, 0.165, 0.900)
             end
             -- Draw MPH tag
-            drawTxt("MPH", speedFont, speedColorText, 0.4, 0.195, 0.924)
+            drawTxt("MPH", speedFont, speedColorText, 0.4, 0.20, 0.924)
             
             -- Draw fuel gauge; always displays 100 but can be modified by setting currentFuel with correct API call
-            local currentFuel = 24
+            local currentFuel = 100.0
             if (currentFuel >= fuelWarnLimit) then
                 -- Over fuel warning limit, draw fuel using fuelColorGood
-                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorGood, 0.9, 0.215, 0.900)
+                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorGood, 0.9, 0.220, 0.900)
             elseif (currentFuel >= fuelEmptyLimit) then
                 -- Under fuel warning limit, draw fuel using fuelColorWarn
-                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorWarn, 0.9, 0.215, 0.900)
+                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorWarn, 0.9, 0.220, 0.900)
             else
                 -- Under fuel empty limit, draw fuel using fuelColorEmpty
-                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorEmpty, 0.9, 0.215, 0.900)
+                drawTxt(("%.3d"):format(math.ceil(currentFuel)), fuelFont, fuelColorEmpty, 0.9, 0.220, 0.900)
             end
             -- Draw fuel tag
-            drawTxt("FUEL", fuelFont, fuelColorText, 0.4, 0.250, 0.924)
+            drawTxt("FUEL", fuelFont, fuelColorText, 0.4, 0.255, 0.924)
             
             -- Draw street name and heading direction
             if (GetStreetNameFromHashKey(var1) and GetNameOfZone(pos.x, pos.y, pos.z)) then
                 if (zones[GetNameOfZone(pos.x, pos.y, pos.z)] and tostring(GetStreetNameFromHashKey(var1))) then
                     if tostring(GetStreetNameFromHashKey(var2)) == "" then
                         -- Heading | street name | zone
-                        drawTxt(direction .. " | " .. zones[GetNameOfZone(pos.x, pos.y, pos.z)], locationFont, locationColorText, 0.6, 0.160, 0.952)
+                        drawTxt(direction .. " | " .. zones[GetNameOfZone(pos.x, pos.y, pos.z)], locationFont, locationColorText, 0.6, 0.165, 0.952)
                     else 
                         -- Heading | street name | zone
-                        drawTxt(direction .. " | " .. tostring(GetStreetNameFromHashKey(var2)) .. " | " .. zones[GetNameOfZone(pos.x, pos.y, pos.z)], locationFont, locationColorText, 0.6, 0.160, 0.952)
+                        drawTxt(direction .. " | " .. tostring(GetStreetNameFromHashKey(var2)) .. " | " .. zones[GetNameOfZone(pos.x, pos.y, pos.z)], locationFont, locationColorText, 0.6, 0.165, 0.952)
                     end
                 end
             end

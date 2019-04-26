@@ -9,7 +9,7 @@ FiveM resource for a simple car HUD with speedometer, fuel, heading and location
 
 ## Imgur album
 
-https://imgur.com/a/urY78oW
+https://imgur.com/gallery/cRA9J0D
 
 ## Credits
 
