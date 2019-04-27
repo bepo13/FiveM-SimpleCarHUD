@@ -1,15 +1,18 @@
 # SimpleCarHUD
 
-FiveM resource for a simple car HUD with speedometer, fuel, heading and location.
+FiveM resource for a simple car HUD. When in a vehicle the following information will be displayed next to the minimap.
+
+* Speed
+* Fuel
+* Seatbelt
+* Heading
+* Street name
+* Zone name
 
 ## Installation
 
 1. Add the SimpleCarHUD folder to your FiveM resources directory
 2. Edit your server.cfg and add "start SimpleCarHUD"
-
-## Imgur album
-
-https://imgur.com/gallery/cRA9J0D
 
 ## Credits
 
