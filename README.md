@@ -14,7 +14,7 @@ FiveM resource for a simple car HUD. When in a vehicle the following information
 1. Add the SimpleCarHUD folder to your FiveM resources directory
 2. Edit your server.cfg and add "start SimpleCarHUD"
 
-## Credits
+## Credit
 
-thatziv for z-Speedometer https://forum.fivem.net/t/release-minimal-speedometer/122035
-lowheartrate for StreetLabel https://forum.fivem.net/t/release-street-label/43864
+* thatziv for z-Speedometer https://forum.fivem.net/t/release-minimal-speedometer/122035
+* lowheartrate for StreetLabel https://forum.fivem.net/t/release-street-label/43864
