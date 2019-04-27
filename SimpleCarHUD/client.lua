@@ -11,7 +11,7 @@ local speedColorOver = {255, 64, 64}        -- Color used to display speed when 
 -- FUEL PARAMETERS --
 local fuelWarnLimit = 25.0                  -- Fuel limit for triggering warning color
 local fuelColorText = {255, 255, 255}       -- Color used to display fuel text
-local fuelColorOver = {255, 255, 255}       -- Color used to display fuel when good
+local fuelColorOver = {160, 255, 160}       -- Color used to display fuel when good
 local fuelColorUnder = {255, 64, 64}        -- Color used to display fuel warning
 
 -- SEATBELT PARAMETERS --
