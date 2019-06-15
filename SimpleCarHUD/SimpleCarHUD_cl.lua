@@ -69,7 +69,8 @@ Citizen.CreateThread(function()
             drawTxt(locationText, 4, locationColorText, 0.5, screenPosX, screenPosY + 0.075)
         
             -- Display remainder of HUD when engine is on and vehicle is not a bicycle
-            if GetIsVehicleEngineRunning(vehicle) and GetVehicleClass(vehicle) ~= 13 then
+            local vehicleClass = GetVehicleClass(vehicle)
+            if GetIsVehicleEngineRunning(vehicle) and vehicleClass ~= 13 then
                 -- Save previous speed and get current speed
                 local prevSpeed = currSpeed
                 currSpeed = GetEntitySpeed(vehicle)
@@ -78,7 +79,7 @@ Citizen.CreateThread(function()
                 SetPedConfigFlag(PlayerPedId(), 32, true)
                 
                 -- Check if seatbelt button pressed, toggle state and handle seatbelt logic
-                if IsControlJustReleased(0, seatbeltInput) then seatbeltIsOn = not seatbeltIsOn end
+                if IsControlJustReleased(0, seatbeltInput) and vehicleClass ~= 8 then seatbeltIsOn = not seatbeltIsOn end
                 if not seatbeltIsOn then
                     -- Eject PED when moving forward, vehicle was going over 45 MPH and acceleration over 100 G's
                     local vehIsMovingFwd = GetEntitySpeedVector(vehicle, true).y > 1.0
@@ -126,9 +127,11 @@ Citizen.CreateThread(function()
                 local cruiseColor = cruiseIsOn and cruiseColorOn or cruiseColorOff
                 drawTxt("CRUISE", 2, cruiseColor, 0.4, screenPosX + 0.040, screenPosY + 0.048)
 
-                -- Draw seatbelt status
-                local seatbeltColor = seatbeltIsOn and seatbeltColorOn or seatbeltColorOff
-                drawTxt("SEATBELT", 2, seatbeltColor, 0.4, screenPosX + 0.080, screenPosY + 0.048)
+                -- Draw seatbelt status if not a motorcyle
+                if vehicleClass ~= 8 then
+                    local seatbeltColor = seatbeltIsOn and seatbeltColorOn or seatbeltColorOff
+                    drawTxt("SEATBELT", 2, seatbeltColor, 0.4, screenPosX + 0.080, screenPosY + 0.048)
+                end
             end
         else
             -- Reset states when not in car
