@@ -84,7 +84,7 @@ Citizen.CreateThread(function()
         
             -- Display remainder of HUD when engine is on and vehicle is not a bicycle
             local vehicleClass = GetVehicleClass(vehicle)
-            if pedInVeh and GetIsVehicleEngineRunning(vehicle) and vehicleClass ~= 13 then
+            if pedInVeh and vehicleClass ~= 13 then
                 -- Save previous speed and get current speed
                 local prevSpeed = currSpeed
                 currSpeed = GetEntitySpeed(vehicle)
