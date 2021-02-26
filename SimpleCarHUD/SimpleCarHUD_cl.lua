@@ -45,6 +45,7 @@ local pedInVeh = false
 local timeText = ""
 local locationText = ""
 local currentFuel = 0.0
+local electricVehicle = false
 
 -- Main thread
 Citizen.CreateThread(function()
@@ -72,6 +73,7 @@ Citizen.CreateThread(function()
             pedInVeh = false
             cruiseIsOn = false
             seatbeltIsOn = false
+            electricVehicle = false
         end
         
         -- Display Location and time when in any vehicle or on foot (if enabled)
@@ -109,6 +111,9 @@ Citizen.CreateThread(function()
                         SetEntityVelocity(player, prevVelocity.x, prevVelocity.y, prevVelocity.z)
                         Citizen.Wait(1)
                         SetPedToRagdoll(player, 1000, 1000, 0, 0, 0, 0)
+
+                        -- The player is no longer in the vehicle at this point
+                        pedInVeh = false
                     else
                         -- Update previous velocity for ejecting player
                         prevVelocity = GetEntityVelocity(vehicle)
@@ -132,34 +137,41 @@ Citizen.CreateThread(function()
                     cruiseIsOn = false
                 end
 
-                -- Check what units should be used for speed
-                if ShouldUseMetricMeasurements() then
-                    -- Get vehicle speed in KPH and draw speedometer
-                    local speed = currSpeed*3.6
-                    local speedColor = (speed >= speedLimit) and speedColorOver or speedColorUnder
-                    drawTxt(("%.3d"):format(math.ceil(speed)), 2, speedColor, 0.8, screenPosX + 0.000, screenPosY + 0.000)
-                    drawTxt("KPH", 2, speedColorText, 0.4, screenPosX + 0.030, screenPosY + 0.018)
-                else
-                    -- Get vehicle speed in MPH and draw speedometer
-                    local speed = currSpeed*2.23694
-                    local speedColor = (speed >= speedLimit) and speedColorOver or speedColorUnder
-                    drawTxt(("%.3d"):format(math.ceil(speed)), 2, speedColor, 0.8, screenPosX + 0.000, screenPosY + 0.000)
-                    drawTxt("MPH", 2, speedColorText, 0.4, screenPosX + 0.030, screenPosY + 0.018)
-                end
-                
-                -- Draw fuel gauge
-                local fuelColor = (currentFuel >= fuelWarnLimit) and fuelColorOver or fuelColorUnder
-                drawTxt(("%.3d"):format(math.ceil(currentFuel)), 2, fuelColor, 0.8, screenPosX + 0.055, screenPosY + 0.000)
-                drawTxt("FUEL", 2, fuelColorText, 0.4, screenPosX + 0.085, screenPosY + 0.018)
+                -- If the player is still in a vehicle (not ejected from a crash)
+                if pedInVeh then
+                    -- Check what units should be used for speed
+                    if ShouldUseMetricMeasurements() then
+                        -- Get vehicle speed in KPH and draw speedometer
+                        local speed = currSpeed*3.6
+                        local speedColor = (speed >= speedLimit) and speedColorOver or speedColorUnder
+                        drawTxt(("%.3d"):format(math.ceil(speed)), 2, speedColor, 0.8, screenPosX + 0.000, screenPosY + 0.000)
+                        drawTxt("KPH", 2, speedColorText, 0.4, screenPosX + 0.030, screenPosY + 0.018)
+                    else
+                        -- Get vehicle speed in MPH and draw speedometer
+                        local speed = currSpeed*2.23694
+                        local speedColor = (speed >= speedLimit) and speedColorOver or speedColorUnder
+                        drawTxt(("%.3d"):format(math.ceil(speed)), 2, speedColor, 0.8, screenPosX + 0.000, screenPosY + 0.000)
+                        drawTxt("MPH", 2, speedColorText, 0.4, screenPosX + 0.030, screenPosY + 0.018)
+                    end
+                    
+                    -- Check for electric vehicles
+                    electricVehicle = GetVehicleHandlingFloat(vehicle,"CHandlingData","fPetrolTankVolume") == 0
+                    if not electricVehicle then
+                        -- Draw fuel gauge
+                        local fuelColor = (currentFuel >= fuelWarnLimit) and fuelColorOver or fuelColorUnder
+                        drawTxt(("%.3d"):format(math.ceil(currentFuel)), 2, fuelColor, 0.8, screenPosX + 0.055, screenPosY + 0.000)
+                        drawTxt("FUEL", 2, fuelColorText, 0.4, screenPosX + 0.085, screenPosY + 0.018)
+                    end
 
-                -- Draw cruise control status
-                local cruiseColor = cruiseIsOn and cruiseColorOn or cruiseColorOff
-                drawTxt("CRUISE", 2, cruiseColor, 0.4, screenPosX + 0.040, screenPosY + 0.048)
+                    -- Draw cruise control status
+                    local cruiseColor = cruiseIsOn and cruiseColorOn or cruiseColorOff
+                    drawTxt("CRUISE", 2, cruiseColor, 0.4, screenPosX + 0.040, screenPosY + 0.048)
 
-                -- Draw seatbelt status if not a motorcyle
-                if vehicleClass ~= 8 then
-                    local seatbeltColor = seatbeltIsOn and seatbeltColorOn or seatbeltColorOff
-                    drawTxt("SEATBELT", 2, seatbeltColor, 0.4, screenPosX + 0.080, screenPosY + 0.048)
+                    -- Draw seatbelt status if not a motorcyle
+                    if vehicleClass ~= 8 then
+                        local seatbeltColor = seatbeltIsOn and seatbeltColorOn or seatbeltColorOff
+                        drawTxt("SEATBELT", 2, seatbeltColor, 0.4, screenPosX + 0.080, screenPosY + 0.048)
+                    end
                 end
             end
         end
@@ -190,8 +202,8 @@ Citizen.CreateThread(function()
             locationText = (streetName == "" or streetName == nil) and (locationText) or (locationText .. " | " .. streetName)
             locationText = (zoneNameFull == "" or zoneNameFull == nil) and (locationText) or (locationText .. " | " .. zoneNameFull)
 
-            -- Update fuel when in a vehicle
-            if pedInVeh then
+            -- Update fuel when in a vehicle as long as it's not an electic vehicle or a cycle
+            if pedInVeh and not electricVehicle and vehicleClass ~=13 then
                 local vehicle = GetVehiclePedIsIn(player, false)
                 if fuelShowPercentage then
                     -- Display remaining fuel as a percentage
